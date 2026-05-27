@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIGER 반도체TOP10 커버드콜 분배금 계산기 | 별탱의 경제이야기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #eaf4fb;
+    --bg-card: #ffffff;
+    --bg-section: #f0f8ff;
+    --blue-light: #dbeeff;
+    --blue-mid: #90caf9;
+    --blue: #42a5f5;
+    --blue-dark: #1976d2;
+    --blue-deep: #0d47a1;
+    --sky: #e3f2fd;
+    --accent: #29b6f6;
+    --accent2: #0288d1;
+    --pink: #f06292;
+    --green: #26a69a;
+    --text: #1a2a3a;
+    --text-sub: #4a6080;
+    --text-muted: #7a9ab8;
+    --border: #c5dff0;
+    --shadow: 0 2px 16px rgba(66,165,245,0.10);
+    --shadow-card: 0 4px 24px rgba(66,165,245,0.13);
+    --radius: 18px;
+    --radius-sm: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* 헤더 */
+  .header {
+    background: rgba(234,244,251,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    text-align: center;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--accent2);
+    background: var(--blue-light);
+    border: 1px solid var(--blue-mid);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  /* 히어로 */
+  .hero {
+    text-align: center;
+    padding: 44px 20px 32px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .hero-emoji {
+    font-size: 42px;
+    margin-bottom: 14px;
+    display: block;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .hero-title {
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+  }
+
+  .hero-title .point {
+    color: var(--accent2);
+  }
+
+  .hero-sub {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.8;
+  }
+
+  /* 공지 배너 */
+  .notice-banner {
+    max-width: 680px;
+    margin: 0 auto 28px;
+    padding: 0 20px;
+  }
+
+  .notice-inner {
+    background: var(--blue-light);
+    border: 1px solid var(--blue-mid);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+  }
+
+  .notice-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--accent);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .notice-list {
+    list-style: none;
+  }
+
+  .notice-list li {
+    font-size: 13px;
+    color: var(--text-sub);
+    padding: 3px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .notice-list li::before {
+    content: '✔';
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* 컨테이너 */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* 섹션 */
+  .step-section {
+    margin-bottom: 20px;
+  }
+
+  .step-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .step-num {
+    width: 28px;
+    height: 28px;
+    background: var(--accent2);
+    color: white;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* 카드 */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+
+  /* 브라우저 프리뷰 */
+  .browser-bar {
+    background: #dbeeff;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .browser-dots { display: flex; gap: 5px; }
+  .browser-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .browser-url {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: monospace;
+  }
+
+  /* 미래에셋 프리뷰 */
+  .mirae-body {
+    background: linear-gradient(135deg, #1a3a6e 0%, #0d47a1 100%);
+    padding: 20px;
+  }
+
+  .mirae-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .mirae-tag {
+    font-size: 10px;
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.85);
+    padding: 3px 9px;
+    border-radius: 5px;
+  }
+
+  .mirae-name {
+    font-size: clamp(14px, 3vw, 20px);
+    font-weight: 700;
+    color: white;
+    margin-bottom: 16px;
+  }
+
+  .mirae-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 500px) {
+    .mirae-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .mirae-stat {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+
+  .m-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 5px;
+  }
+
+  .m-value {
+    font-size: clamp(13px, 2.5vw, 18px);
+    font-weight: 700;
+    color: white;
+  }
+
+  .m-change { font-size: 10px; margin-top: 2px; }
+  .up { color: #55efc4; }
+  .orange { color: #fdcb6e; }
+
+  .mirae-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .mirae-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .mirae-btn.primary {
+    background: #f4821f;
+    color: white;
+    box-shadow: 0 4px 14px rgba(244,130,31,0.35);
+  }
+
+  .mirae-btn.secondary {
+    background: rgba(255,255,255,0.12);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .mirae-btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+
+  /* 클릭 안내 */
+  .click-guide {
+    margin-top: 12px;
+    background: var(--blue-light);
+    border: 1.5px solid var(--blue-mid);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .guide-icon { font-size: 26px; flex-shrink: 0; }
+
+  .guide-text { flex: 1; }
+  .guide-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 3px;
+  }
+  .guide-desc { font-size: 11px; color: var(--text-muted); line-height: 1.6; }
+
+  .guide-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--accent2);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 9px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .guide-btn:hover { background: var(--blue-deep); transform: translateY(-1px); }
+
+  /* 주가 카드 */
+  .price-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .price-left { flex: 1; }
+  .price-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .price-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .price-code { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .naver-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #03c75a;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .naver-btn:hover { background: #02a84b; transform: translateY(-1px); }
+
+  /* 계산기 카드 */
+  .calc-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    padding: 22px 20px;
+  }
+
+  .calc-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 22px;
+    background: var(--sky);
+    border-radius: var(--radius-sm);
+    padding: 4px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: white;
+    color: var(--accent2);
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(66,165,245,0.15);
+  }
+
+  .calc-panel { display: none; }
+  .calc-panel.active { display: block; }
+
+  .input-group { margin-bottom: 16px; }
+
+  .input-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .input-meta-label { font-size: 12px; color: var(--text-sub); font-weight: 500; }
+  .input-meta-value { font-size: 14px; font-weight: 700; color: var(--accent2); }
+
+  input[type="range"] {
+    width: 100%;
+    height: 5px;
+    background: var(--blue-light);
+    border-radius: 5px;
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    background: var(--accent2);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 0 4px rgba(2,136,209,0.18);
+    border: 2px solid white;
+  }
+
+  .range-ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .text-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--sky);
+    border: 1.5px solid var(--blue-mid);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+
+  .text-input-row:focus-within {
+    border-color: var(--accent2);
+    background: #e8f4ff;
+  }
+
+  .ti-label {
+    font-size: 12px;
+    color: var(--text-sub);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .ti-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    text-align: right;
+  }
+
+  .ti-unit { font-size: 12px; color: var(--text-muted); }
+
+  /* 결과 */
+  .result-wrap { margin-top: 20px; }
+
+  .result-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .res-card {
+    background: var(--sky);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+
+  .res-card.highlight {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border-color: var(--blue-mid);
+  }
+
+  .res-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .tag-blue { background: rgba(2,136,209,0.12); color: var(--accent2); }
+  .tag-green { background: rgba(38,166,154,0.12); color: var(--green); }
+  .tag-pink { background: rgba(240,98,146,0.12); color: var(--pink); }
+  .tag-gray { background: rgba(0,0,0,0.06); color: var(--text-muted); }
+
+  .res-value {
+    font-size: clamp(18px, 4vw, 24px);
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .res-card.highlight .res-value { color: var(--accent2); }
+  .res-sub { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+  .result-list {
+    background: var(--sky);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .res-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .res-row:last-child { border-bottom: none; }
+
+  .res-row-label {
+    font-size: 12px;
+    color: var(--text-sub);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .res-row-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .res-row-val.blue { color: var(--accent2); }
+  .res-row-val.green { color: var(--green); }
+
+  /* 주의사항 */
+  .caution {
+    margin-top: 14px;
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 11px;
+    color: #795548;
+    line-height: 1.8;
+  }
+
+  /* 푸터 */
+  .footer {
+    max-width: 680px;
+    margin: 40px auto 0;
+    padding: 0 20px 60px;
+  }
+
+  .made-by-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 20px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .made-by-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .insta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(220,39,67,0.3);
+  }
+
+  .insta-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220,39,67,0.4);
+  }
+
+  .made-by-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .made-by-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.9;
+  }
+
+  .footer-copy {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="header">
+  <div class="header-badge">
+    ✨ 별탱의 경제이야기 | 분배금 계산기
+  </div>
+</header>
+
+<!-- 히어로 -->
+<div class="hero">
+  <span class="hero-emoji">💰</span>
+  <h1 class="hero-title">
+    TIGER 반도체TOP10<br>
+    <span class="point">커버드콜 분배금 계산기</span>
+  </h1>
+  <p class="hero-sub">
+    내가 사면 매달 얼마 받을 수 있을까?<br>
+    주가와 분배금을 직접 확인하고 계산해보세요
+  </p>
+</div>
+
+<!-- 공지 배너 -->
+<div class="notice-banner">
+  <div class="notice-inner">
+    <div class="notice-tag">📌 계산기 사용 안내</div>
+    <ul class="notice-list">
+      <li>분배금은 매달 미래에셋 공식 홈페이지에서 공시돼요</li>
+      <li>주가는 네이버 증권에서 실시간으로 확인하세요</li>
+      <li>공시된 분배금은 <strong>세전 금액</strong> 기준이에요</li>
+      <li>옵션 프리미엄 재원은 비과세, 구성종목 배당금 재원은 15.4% 과세</li>
+    </ul>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- STEP 1 -->
+  <div class="step-section">
+    <div class="step-label">
+      <div class="step-num">1</div>
+      <div class="step-title">이번달 분배금 확인하기</div>
+    </div>
+
+    <div class="card">
+      <div class="browser-bar">
+        <div class="browser-dots">
+          <div class="browser-dot dot-r"></div>
+          <div class="browser-dot dot-y"></div>
+          <div class="browser-dot dot-g"></div>
+        </div>
+        <div class="browser-url">investments.miraeasset.com/tigeretf</div>
+      </div>
+
+      <div class="mirae-body">
+        <div class="mirae-tags">
+          <span class="mirae-tag">커버드콜</span>
+          <span class="mirae-tag">개인연금</span>
+          <span class="mirae-tag">퇴직연금 70%</span>
+          <span class="mirae-tag">월배당</span>
+        </div>
+        <div class="mirae-name">TIGER 반도체TOP10커버드콜액티브 (0177R0)</div>
+        <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); border-radius:6px; padding:5px 12px; margin-bottom:14px;">
+          <span style="font-size:11px; color:rgba(255,255,255,0.6);">📅 아래 수치는</span>
+          <span style="font-size:11px; font-weight:700; color:#fdcb6e;">2025년 5월 27일 기준</span>
+          <span style="font-size:11px; color:rgba(255,255,255,0.6);">참고용이에요</span>
+        </div>
+
+        <div class="mirae-stats">
+          <div class="mirae-stat">
+            <div class="m-label">기준가격(NAV)</div>
+            <div class="m-value">15,347<span style="font-size:11px">.32원</span></div>
+            <div class="m-change up">▲ 695.09원(4.33%)</div>
+          </div>
+          <div class="mirae-stat">
+            <div class="m-label">주당 시장가격</div>
+            <div class="m-value">15,355<span style="font-size:11px">원</span></div>
+            <div class="m-change up">▲ 660.00원(4.12%)</div>
+          </div>
+          <div class="mirae-stat">
+            <div class="m-label">순자산 규모</div>
+            <div class="m-value">6,696<span style="font-size:11px">억원</span></div>
+          </div>
+          <div class="mirae-stat">
+            <div class="m-label">수익률(1개월)</div>
+            <div class="m-value orange">35.46<span style="font-size:11px">%</span></div>
+          </div>
+        </div>
+
+        <div class="mirae-btns">
+          <a href="https://investments.miraeasset.com/tigeretf/ko/product/search/detail/index.do?ksdFund=KR70177R0000" target="_blank" class="mirae-btn secondary">
+            📊 월간운용보고서
+          </a>
+          <a href="https://investments.miraeasset.com/tigeretf/ko/product/search/detail/index.do?ksdFund=KR70177R0000" target="_blank" class="mirae-btn primary">
+            💰 분배금 지급 현황
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="click-guide">
+      <div class="guide-icon">👆</div>
+      <div class="guide-text">
+        <div class="guide-title">분배금 지급 현황 버튼 클릭!</div>
+        <div class="guide-desc">위 수치는 <strong>2025년 5월 27일 기준 참고용</strong>이에요.<br>미래에셋 공식 페이지에서 <strong>이번달 최신 분배금</strong>을 확인 후 아래 계산기에 입력해주세요.</div>
+      </div>
+      <a href="https://investments.miraeasset.com/tigeretf/ko/product/search/detail/index.do?ksdFund=KR70177R0000" target="_blank" class="guide-btn">
+        바로가기 →
+      </a>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-section">
+    <div class="step-label">
+      <div class="step-num">2</div>
+      <div class="step-title">현재 주가 확인하기</div>
+    </div>
+
+    <div class="price-card">
+      <div class="price-left">
+        <div class="price-label">네이버 증권에서 현재 주가를 확인하세요</div>
+        <div class="price-name">TIGER 반도체TOP10커버드콜액티브</div>
+        <div class="price-code">종목코드 0177R0</div>
+      </div>
+      <a href="https://finance.naver.com/item/main.naver?code=0177R0" target="_blank" class="naver-btn">
+        네이버 증권 →
+      </a>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-section">
+    <div class="step-label">
+      <div class="step-num">3</div>
+      <div class="step-title">내 분배금 계산하기</div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-tabs">
+        <button class="tab-btn active" onclick="switchTab('shares')">🔢 주수로 계산</button>
+        <button class="tab-btn" onclick="switchTab('amount')">💵 금액으로 계산</button>
+      </div>
+
+      <!-- 주수 패널 -->
+      <div class="calc-panel active" id="panel-shares">
+        <div class="input-group">
+          <div class="input-meta">
+            <span class="input-meta-label">보유 주수</span>
+            <span class="input-meta-value" id="shares-display">100주</span>
+          </div>
+          <input type="range" min="1" max="2000" step="1" value="100" id="shares-slider" oninput="onSharesChange()">
+          <div class="range-ends"><span>1주</span><span>2,000주</span></div>
+        </div>
+      </div>
+
+      <!-- 금액 패널 -->
+      <div class="calc-panel" id="panel-amount">
+        <div class="input-group">
+          <div class="input-meta">
+            <span class="input-meta-label">투자 금액</span>
+            <span class="input-meta-value" id="amount-display">100만원</span>
+          </div>
+          <input type="range" min="10" max="10000" step="10" value="100" id="amount-slider" oninput="onAmountChange()">
+          <div class="range-ends"><span>10만원</span><span>1억원</span></div>
+        </div>
+      </div>
+
+      <!-- 공통 입력 -->
+      <div class="text-input-row">
+        <span class="ti-label">📌 현재 주가</span>
+        <input type="number" class="ti-input" id="price-input" value="15355" oninput="calculate()" placeholder="네이버 증권 확인">
+        <span class="ti-unit">원</span>
+      </div>
+
+      <div class="text-input-row">
+        <span class="ti-label">💰 이번달 분배금</span>
+        <input type="number" class="ti-input" id="dist-input" value="170" oninput="calculate()" placeholder="미래에셋 공시 확인">
+        <span class="ti-unit">원/주</span>
+      </div>
+
+      <!-- 결과 -->
+      <div class="result-wrap">
+        <div class="result-top">
+          <div class="res-card">
+            <div class="res-label">보유 주수 / 투자금액</div>
+            <div class="res-value" id="res-shares">100주</div>
+            <div class="res-sub" id="res-invest">약 154만원 투자</div>
+          </div>
+          <div class="res-card highlight">
+            <div class="res-label">월 분배금 <span class="tag tag-green">비과세 기준</span></div>
+            <div class="res-value" id="res-monthly">17,000원</div>
+            <div class="res-sub">옵션 프리미엄 재원 기준</div>
+          </div>
+        </div>
+
+        <div class="result-list">
+          <div class="res-row">
+            <span class="res-row-label">월 분배금 <span class="tag tag-blue">세전(공시 기준)</span></span>
+            <span class="res-row-val blue" id="res-pre">17,000원</span>
+          </div>
+          <div class="res-row">
+            <span class="res-row-label">월 분배금 <span class="tag tag-pink">세후(일반ETF 기준)</span></span>
+            <span class="res-row-val" id="res-post">14,382원</span>
+          </div>
+          <div class="res-row">
+            <span class="res-row-label">월 분배금 <span class="tag tag-green">비과세(옵션프리미엄)</span></span>
+            <span class="res-row-val green" id="res-nontax">17,000원</span>
+          </div>
+          <div class="res-row">
+            <span class="res-row-label">연간 분배금 (비과세 기준)</span>
+            <span class="res-row-val blue" id="res-annual">204,000원</span>
+          </div>
+          <div class="res-row">
+            <span class="res-row-label">월 분배율 / 연 환산 수익률</span>
+            <span class="res-row-val blue" id="res-rate">1.11% / 13.3%</span>
+          </div>
+        </div>
+
+        <div class="caution">
+          ⚠️ <strong>분배금 세금 안내</strong><br>
+          옵션 프리미엄에서 나온 분배금은 <strong>비과세</strong>예요. 하지만 구성종목(삼성전자, SK하이닉스 등) 배당금이 섞이는 달에는 해당 부분만큼 <strong>15.4% 세금</strong>이 붙어요. 매달 공시 내용을 꼭 확인하세요!<br><br>
+          ※ 이 계산기는 참고용이며 투자 권유가 아닙니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="made-by-card">
+    <div class="made-by-label">MADE BY</div>
+    <a href="https://www.instagram.com/taengstar_" target="_blank" class="insta-badge">
+      <span class="insta-icon">📷</span>
+      <span>@taengstar_</span>
+    </a>
+    <div class="made-by-name">별탱의 경제이야기 💥</div>
+    <div class="made-by-desc">
+      쉽고 재밌는 재테크 인스타툰을 만들고 있어요<br>
+      인스타그램에서 더 많은 콘텐츠를 만나보세요!
+    </div>
+  </div>
+  <div class="footer-copy">이 계산기는 참고용입니다. 투자는 본인 책임 하에 신중하게 결정하세요.</div>
+</footer>
+
+<script>
+  const DEFAULT_PRICE = 15355;
+  let mode = 'shares';
+
+  function switchTab(t) {
+    mode = t;
+    document.querySelectorAll('.tab-btn').forEach((el, i) => {
+      el.classList.toggle('active', (i === 0 && t === 'shares') || (i === 1 && t === 'amount'));
+    });
+    document.getElementById('panel-shares').classList.toggle('active', t === 'shares');
+    document.getElementById('panel-amount').classList.toggle('active', t === 'amount');
+    calculate();
+  }
+
+  function onSharesChange() {
+    const v = parseInt(document.getElementById('shares-slider').value);
+    document.getElementById('shares-display').textContent = v.toLocaleString() + '주';
+    calculate();
+  }
+
+  function onAmountChange() {
+    const v = parseInt(document.getElementById('amount-slider').value);
+    document.getElementById('amount-display').textContent = v >= 10000 ? (v / 10000).toFixed(1) + '억원' : v + '만원';
+    calculate();
+  }
+
+  function fw(n) { return Math.round(n).toLocaleString() + '원'; }
+
+  function calculate() {
+    const price = parseInt(document.getElementById('price-input').value) || DEFAULT_PRICE;
+    const dist = parseInt(document.getElementById('dist-input').value) || 170;
+
+    let shares;
+    if (mode === 'shares') {
+      shares = parseInt(document.getElementById('shares-slider').value) || 100;
+    } else {
+      const amountMan = parseInt(document.getElementById('amount-slider').value) || 100;
+      shares = Math.floor((amountMan * 10000) / price);
+    }
+
+    const invest = shares * price;
+    const monthly = shares * dist;
+    const monthlyPost = Math.round(monthly * 0.846);
+    const annual = monthly * 12;
+    const monthlyRate = price > 0 ? ((dist / price) * 100).toFixed(2) : '0.00';
+    const annualRate = price > 0 ? ((dist * 12 / price) * 100).toFixed(1) : '0.0';
+
+    const investStr = invest >= 100000000
+      ? (invest / 100000000).toFixed(1) + '억원'
+      : '약 ' + Math.round(invest / 10000) + '만원';
+
+    document.getElementById('res-shares').textContent = shares.toLocaleString() + '주';
+    document.getElementById('res-invest').textContent = investStr + ' 투자';
+    document.getElementById('res-monthly').textContent = fw(monthly);
+    document.getElementById('res-pre').textContent = fw(monthly);
+    document.getElementById('res-post').textContent = fw(monthlyPost);
+    document.getElementById('res-nontax').textContent = fw(monthly);
+    document.getElementById('res-annual').textContent = fw(annual);
+    document.getElementById('res-rate').textContent = 'Monthly ' + monthlyRate + '% / 연 ' + annualRate + '%';
+  }
+
+  calculate();
+</script>
+</body>
+</html>
